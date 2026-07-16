@@ -1,14 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+// Hardcoding these values to bypass build-time environment variable issues
+const supabaseUrl = 'https://hutpmvjocklspplywxke.supabase.co';
+const supabaseAnonKey = 'PASTE_YOUR_LONG_eyJ_KEY_HERE'; // <--- PUT YOUR ACTUAL KEY HERE
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  // We don't throw an error here to allow the build to proceed
-  console.warn("Supabase environment variables are missing during build time.");
-}
-
-export const supabase = createClient(
-  supabaseUrl || 'https://placeholder.supabase.co', 
-  supabaseAnonKey || 'placeholder-key'
-);
+export const supabase = createClient(supabaseUrl, supabaseAnonKey);
