@@ -133,10 +133,11 @@ Provide a 2-3 sentence explanation of the risk level and whether it's likely fra
     }
 
     // Store analysis in database
-    const { data: analysis, error: analysisError } = await supabase
-      .from('transaction_analysis')
-      .insert([
-        {
+    // Change this:
+const { data: analysis, error } = await supabase.from('transaction_analysis').insert([...]);
+
+// To this (renaming 'analysis' to 'result'):
+const { data: result, error } = await supabase.from('transaction_analysis').insert([...]);
           transaction_id,
           risk_score: Math.round(riskScore),
           risk_level: riskScore > 70 ? 'high' : riskScore > 40 ? 'medium' : 'low',
