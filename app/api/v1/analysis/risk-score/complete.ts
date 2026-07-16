@@ -134,7 +134,29 @@ Provide a 2-3 sentence explanation of the risk level and whether it's likely fra
 
     // Store analysis in database
     // Change this:
-const { data: analysis, error } = await supabase.from('transaction_analysis').insert([...]);
+// Corrected database storage block
+const { data: result, error: storageError } = await supabase
+  .from('transaction_analysis')
+  .insert([
+    {
+      transaction_id,
+      risk_score: Math.round(riskScore),
+      risk_level: riskScore > 70 ? 'high' : 'low',
+      fraud_probability: Math.min(100, riskScore),
+      risk_factors: riskFactors,
+      ai_explanation: aiExplanation,
+      ai_recommendation: recommendation,
+      analyzed_at: new Date().toISOString(),
+    },
+  ])
+  .select()
+  .single();
+
+// Corrected error check (using storageError instead of analysisError)
+if (storageError) {
+  console.error('Analysis storage error:', storageError);
+}
+
 
 // To this (renaming 'analysis' to 'result'):
 const { data: result, error } = await supabase.from('transaction_analysis').insert([...]);
