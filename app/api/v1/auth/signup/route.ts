@@ -6,17 +6,19 @@ export async function POST(request: Request) {
   const { email, password } = await request.json();
   const cookieStore = cookies();
 
-    const supabase = createServerClient(
-  'https://hutpmvjocklspplywxke.supabase.co',
-  'PASTE_YOUR_ANON_KEY_HERE', // Put your actual eyJ... key here
-  {
-    cookies: {
-      get(name: string) {
-        return cookieStore.get(name)?.value;
+  // Replace the old supabase initialization with this:
+  const supabase = createServerClient(
+    'https://hutpmvjocklspplywxke.supabase.co',
+    'YOUR_ACTUAL_ANON_KEY_HERE', // <-- PASTE YOUR LONG eyJ... KEY HERE
+    {
+      cookies: {
+        get(name: string) {
+          return cookieStore.get(name)?.value;
+        },
       },
-    },
-  }
-);
+    }
+  );
+
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
