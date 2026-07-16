@@ -1,46 +1,31 @@
-'use server';
-
-import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
-import { z } from 'zod';
+import { cookies } from 'next/headers';
+import { NextResponse } from 'next/server';
 
-const LoginSchema = z.object({
-  email: z.string().email(),
-  password: z.string(),
-});
+export async function POST(request: Request) {
+  const { email, password } = await request.json();
+  const cookieStore = cookies();
 
-export async function POST(request: NextRequest) {
-  try {
-    const body = await request.json();
-    const validatedData = LoginSchema.parse(body);
-
-    const supabase = createServerClient_();
-
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: validatedData.email,
-      password: validatedData.password,
-    });
-
-    if (error) {
-      return NextResponse.json(
-        { error: error.message },
-        { status: 401 }
-      );
-    }
-
-    return NextResponse.json(
-      {
-        user_id: data.user!.id,
-        access_token: data.session!.access_token,
-        refresh_token: data.session!.refresh_token,
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        get(name: string) {
+          return cookieStore.get(name)?.value;
+        },
       },
-      { status: 200 }
-    );
-  } catch (error) {
-    console.error('Login error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    }
+  );
+
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
+
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 400 });
   }
+
+  return NextResponse.json({ data });
 }
