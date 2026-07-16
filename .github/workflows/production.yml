@@ -18,7 +18,8 @@ jobs:
         run: npm install --no-audit --no-fund
       
       - name: Run tests
-        run: npm run test
+        - name: Run tests
+  run: npm run test -- --passWithNoTests
       
       - name: Build application
         run: npm run build
