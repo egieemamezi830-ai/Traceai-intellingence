@@ -1,7 +1,7 @@
 'use server';
 
 import { NextRequest, NextResponse } from 'next/server';
-import { createServerClient_ } from '@/lib/supabase';
+import { createServerClient } from '@supabase/ssr';
 import { z } from 'zod';
 
 const LoginSchema = z.object({
