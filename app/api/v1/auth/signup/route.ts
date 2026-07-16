@@ -6,9 +6,9 @@ export async function POST(request: Request) {
   const { email, password } = await request.json();
   const cookieStore = cookies();
 
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    const supabase = createServerClient(
+    process.env.supabaseUrl!,
+    process.env.supabaseKey!,
     {
       cookies: {
         get(name: string) {
@@ -17,7 +17,6 @@ export async function POST(request: Request) {
       },
     }
   );
-
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
